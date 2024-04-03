@@ -1,0 +1,21 @@
+{
+  "name": "holistic-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@arcgis/charts-components": "^4.29.6",
+    "@arcgis/charts-model": "^4.29.6",
+    "@arcgis/map-components": "^4.29.10",
+    "@esri/calcite-components": "^2.6.0"
+  }
+}

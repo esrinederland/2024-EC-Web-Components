@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  display: flex;
+}
+
+arcgis-map {
+  flex: 1;
+}
+
+.chart-container,
+.chart-element {
+  display: flex;
+  flex: 1;
+}

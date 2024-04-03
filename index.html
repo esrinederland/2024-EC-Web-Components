@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Holistic Testing</title>
+  </head>
+  <body>
+    <script type="module" src="/src/main.ts"></script>
+    <calcite-shell>
+      <calcite-navigation slot="header">
+        <calcite-navigation-logo
+          slot="logo"
+          heading="Dutch monuments"
+          description="Holistic Testing"
+        >
+        </calcite-navigation-logo>
+        <calcite-menu id="menu-navigation-primary" slot="content-end">
+          <!-- <calcite-menu-item
+            active
+            text="Bar Chart"
+            icon-start="graph-bar"
+            text-enabled
+          ></calcite-menu-item>
+          <calcite-menu-item
+            text="Pie Chart"
+            icon-start="pie-chart"
+            text-enabled
+          ></calcite-menu-item> -->
+        </calcite-menu>
+      </calcite-navigation>
+
+      <calcite-shell-panel
+        slot="panel-end"
+        position="end"
+        id="shell-panel-start"
+        width-scale="l"
+      >
+        <calcite-action-bar slot="action-bar">
+          <calcite-action
+            disabled
+            id="clear-selection"
+            text="Clear selection"
+            icon="clear-selection"
+          ></calcite-action>
+        </calcite-action-bar>
+        <calcite-panel heading="Chart" id="panel-end">
+          <div id="chart-container" class="chart-container">
+            <!-- <arcgis-charts-bar-chart class="chart-element">
+              <arcgis-charts-action-bar
+                slot="action-bar"
+              ></arcgis-charts-action-bar>
+            </arcgis-charts-bar-chart> -->
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+              "
+            >
+            <calcite-tip close-disabled>
+              <div style="text-align: center">
+                <calcite-icon icon="graph-bar"></calcite-icon>
+                <p>No chart is active. Select one to check out the data</p>
+              </div>
+            </div>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+
+      <arcgis-map item-id="d06da6d5d902410698d3efebddae65cd">
+        <!-- <arcgis-sketch
+          position="top-right"
+          creation-mode="update"
+          layout="horizontal"
+        >
+        </arcgis-sketch> -->
+      </arcgis-map>
+      <calcite-panel slot="footer" id="calcite-panel-footer" heading="Test"> </calcite-panel>
+    </calcite-shell>
+  </body>
+</html>
