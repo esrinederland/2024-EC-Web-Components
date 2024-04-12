@@ -1,7 +1,7 @@
 {
-  "name": "holistic-test",
+  "name": "2024-ec-web-components",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
