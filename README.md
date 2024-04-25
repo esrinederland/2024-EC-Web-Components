@@ -1,7 +1,6 @@
-# 2024-EC-Web-Components
-Showcase app shown during the Web Components session at the Dutch Esri Conference
+# Esri Connect 2024 - Custom Components Demo
 
-## How to run
-1. Clone this repository
-2. Run `npm install`
-3. Run `npm run dev`
+## Getting started
+To run the application run the following commands:
+- `npm install`
+- `npm run dev`

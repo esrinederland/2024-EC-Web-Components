@@ -1,20 +1,20 @@
+import "@arcgis/core/assets/esri/themes/dark/main.css";
+import "./style.css";
+
 import { defineCustomElements as defineMapElements } from "@arcgis/map-components/dist/loader";
+import { defineCustomElements as defineCalciteElements } from "@esri/calcite-components/dist/loader";
 import { defineCustomElements as defineChartsElements } from "@arcgis/charts-components/dist/loader";
 
-import { defineCustomElements } from "@esri/calcite-components/dist/loader";
-import { setAssetPath } from "@esri/calcite-components/dist/components";
+/**
+ * Define and lazy load the component package using the CDN hosted assets
+ */
+defineMapElements(window, {
+  resourcesUrl: "https://js.arcgis.com/map-components/4.29/assets",
+});
 
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import FeatureLayerView from "@arcgis/core/views/layers/FeatureLayerView";
-import Sketch from "@arcgis/core/widgets/Sketch";
-
-import "@arcgis/core/assets/esri/themes/light/main.css";
-import "@esri/calcite-components/dist/calcite/calcite.css";
-import "./style.css";
-import { createMenuItems } from "./createCharts";
-
-// CDN hosted assets
-setAssetPath("https://js.arcgis.com/calcite-components/2.6.0/assets");
+defineCalciteElements(window, {
+  resourcesUrl: "https://js.arcgis.com/calcite-components/2.7.1/assets",
+});
 
 // define custom elements in the browser, and load the assets from the CDN
 defineChartsElements(window, {
@@ -22,27 +22,21 @@ defineChartsElements(window, {
 });
 
 /**
- * Define and lazy load the component package.
+ * Add interaction with Calcite Actions
  */
-defineMapElements();
-defineCustomElements(window, {
-  resourcesUrl: "https://js.arcgis.com/calcite-components/2.6.0/assets",
+const shellPanel = document.getElementById(
+  "shell-panel-start"
+) as HTMLCalciteShellPanelElement;
+const actions = shellPanel?.querySelectorAll("calcite-action");
+actions?.forEach((el) => {
+  el.addEventListener("click", () => {
+    shellPanel.collapsed = !shellPanel.collapsed;
+  });
 });
-/**
- * Use `document.querySelector()` to get a reference to the `arcgis-map` component.
- * Add an event listener for the `arcgis-map` component's `viewReadyChange` event.
- */
-
-let chartRef: any = {};
-let charts: Array<
-  HTMLArcgisChartsBarChartElement | HTMLArcgisChartsPieChartElement
-> = [];
-const graphicsLayer = new GraphicsLayer();
-let currentSelectedOids = [];
 
 document
   .querySelector("arcgis-map")
-  .addEventListener("arcgisViewReadyChange", async (event) => {
+  ?.addEventListener("arcgisViewReadyChange", async (event) => {
     console.log("arcgisViewReadyChange event fired!");
 
     /**
@@ -52,109 +46,53 @@ document
     const { map, view } = event.target;
     await map.load();
     await view.when();
-    /**
-     * Getting the feature layer holding the chart specification
-     */
-    const featureLayer = map.layers.items.find(
-      (layer) => layer.title === "Rijksmonumenten"
-    );
-    view.whenLayerView(featureLayer).then((layerView) => {
-      view.watch("updating", async (isLoading) => {
-        if (!isLoading) {
-          const query = (layerView as FeatureLayerView).createQuery();
-          query.where = "1=1";
-          query.geometry = view.extent;
-          const resultQuery = await (
-            layerView as FeatureLayerView
-          ).queryFeatures(query);
-          console.log("Features in view:", resultQuery.features.length);
-          (
-            document.getElementById(
-              "calcite-panel-footer"
-            ) as HTMLCalcitePanelElement
-          ).heading = `Features in view: ${resultQuery.features.length}`;
-        }
-      });
-    });
-
-    charts = featureLayer.charts;
-    /**
-     * Create menu items in header that will toggle the charts visibility
-     */
-    const menuItems = createMenuItems(view, featureLayer, charts);
-    document
-      .querySelector("calcite-menu#menu-navigation-primary")
-      ?.appendChild(menuItems[0]);
-    document
-      .querySelector("calcite-menu#menu-navigation-primary")
-      ?.appendChild(menuItems[1]);
-
-    /**
-     * Adding the selection functionality
-     */
-    const sketchWidget = new Sketch({
-      availableCreateTools: [],
-      layer: graphicsLayer,
-      view: view,
-    });
-    view.ui.add(sketchWidget, "top-right");
-    //const sketchComponent = document.querySelector("arcgis-sketch");
-
-    // if (sketchComponent) {
-    //   //sketchComponent.availableCreateTools = [];
-    //   sketchComponent.visibleElementsSettingsMenu = false;
-    //   sketchComponent.visibleElementsUndoRedoMenu = false;
-    //   sketchComponent.layer = graphicsLayer;
-    //   sketchComponent?.addEventListener("sketchCreate", (event) => {
-    //     console.log("sketchCreate event fired!", event);
-    //   });
-    // }
-
-    /**
-     * Setting up the Bar Chart
-     */
-    // chartRef = document.querySelector("arcgis-charts-bar-chart");
-    // if (chartRef) {
-    //   chartRef.config = featureLayer.charts[0];
-
-    //   chartRef.layer = featureLayer;
-    //   chartRef.view = view;
-    //   chartRef?.addEventListener("arcgisChartsSelectionComplete", (event) => {
-    //     console.log("arcgisChartsSelectionComplete event fired!");
-    //     const actionClearSelection = document.querySelector(
-    //       "calcite-action#clear-selection"
-    //     ) as HTMLCalciteActionElement;
-
-    //     if (event.detail.selectionOIDs) {
-    //       const isSelectionApplied = applySelectionToLayer(
-    //         featureLayer,
-    //         event.detail.selectionOIDs
-    //       );
-    //       if (isSelectionApplied) {
-    //         actionClearSelection.indicator = true;
-    //         actionClearSelection.disabled = false;
-    //         actionClearSelection?.addEventListener("click", () => {
-    //           chartRef.clearSelection();
-    //           actionClearSelection.indicator = !actionClearSelection.indicator;
-    //           actionClearSelection.disabled = !actionClearSelection.disabled;
-    //         });
-    //       }
-    //     } else {
-    //       applySelectionToLayer(featureLayer, [], true);
-    //     }
-    //   });
-    // }
-
-    // const mapElement = document.querySelector("arcgis-map");
-
-    // mapElement?.addEventListener("arcgisViewChange", (event) => {
-    //   // event.target provides a reference to the object that dispatched the event
-    //   // event.target is used here since the event type is CustomEvent<void>
-    //   // void means that there are no details to show
-    //   const { zoom } = event.target;
-    //   console.log("arcgisViewChange event fired!");
-    //   console.log(`The zoom is ${zoom}`);
-    // });
-
-    // Add more functionality here.
+    const featureLayer = map.layers.find((layer) => {
+      return layer.title === "Energielabels Pand";
+    }) as __esri.FeatureLayer;
+    loadPieChart(view, featureLayer);
+    loadBarChart(view, featureLayer);
   });
+
+const loadPieChart = (view: __esri.MapView, layer: __esri.FeatureLayer) => {
+  const pieChartElement = document.querySelector(
+    "arcgis-charts-pie-chart"
+  ) as HTMLArcgisChartsPieChartElement;
+  pieChartElement.config = layer.charts[0];
+  pieChartElement.layer = layer;
+  pieChartElement.view = view;
+};
+
+const loadBarChart = (view: __esri.MapView, layer: __esri.FeatureLayer) => {
+  const pieChartElement = document.querySelector(
+    "arcgis-charts-bar-chart"
+  ) as HTMLArcgisChartsBarChartElement;
+  pieChartElement.config = layer.charts[1];
+  pieChartElement.layer = layer;
+  pieChartElement.view = view;
+
+  pieChartElement?.addEventListener(
+    "arcgisChartsSelectionComplete",
+    (event) => {
+      console.log("arcgisChartsSelectionComplete event fired!");
+
+      if (event.detail.selectionOIDs) {
+        applySelectionToLayer(layer, event.detail.selectionOIDs);
+      } else {
+        applySelectionToLayer(layer, [], true);
+      }
+    }
+  );
+};
+
+const applySelectionToLayer = (
+  featureLayer: __esri.FeatureLayer,
+  selectedOids: Array<number>,
+  reset: boolean = false
+): boolean => {
+  if (selectedOids.length === 0 || reset) {
+    featureLayer.definitionExpression = "1=1";
+    return false;
+  }
+  featureLayer.definitionExpression = `OBJECTID in (${selectedOids.join(",")})`;
+  return true;
+};

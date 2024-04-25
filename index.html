@@ -3,69 +3,59 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Esri Connect 2024 - Building apps with GeoSpatial Web Components</title>
+  <title>Esri Connect 2024 - Custom Components Demo</title>
 </head>
 
-<body>
-  <script type="module" src="/src/main.ts"></script>
+<body class="calcite-mode-dark">
   <calcite-shell>
     <calcite-navigation slot="header">
-      <calcite-navigation-logo slot="logo" heading="Dutch monuments" description="Holistic Testing">
-      </calcite-navigation-logo>
-      <calcite-menu id="menu-navigation-primary" slot="content-end">
-        <!-- <calcite-menu-item
-            active
-            text="Bar Chart"
-            icon-start="graph-bar"
-            text-enabled
-          ></calcite-menu-item>
-          <calcite-menu-item
-            text="Pie Chart"
-            icon-start="pie-chart"
-            text-enabled
-          ></calcite-menu-item> -->
-      </calcite-menu>
+      <calcite-navigation-logo slot="logo"
+        heading="Esri Connect 2024 - Custom Components Demo"></calcite-navigation-logo>
     </calcite-navigation>
-
-    <calcite-shell-panel slot="panel-end" position="end" id="shell-panel-start" width-scale="l">
+    <calcite-shell-panel width-scale="l" slot="panel-start" position="start" id="shell-panel-start">
       <calcite-action-bar slot="action-bar">
-        <calcite-action disabled id="clear-selection" text="Clear selection" icon="clear-selection"></calcite-action>
+        <calcite-action active text="Charts" icon="graph-bar"></calcite-action>
       </calcite-action-bar>
-      <calcite-panel heading="Chart" id="panel-end">
-        <div id="chart-container" class="chart-container">
-          <!-- <arcgis-charts-bar-chart class="chart-element">
-              <arcgis-charts-action-bar
-                slot="action-bar"
-              ></arcgis-charts-action-bar>
-            </arcgis-charts-bar-chart> -->
-          <div style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 100%;
-              ">
-            <calcite-tip close-disabled>
-              <div style="text-align: center">
-                <calcite-icon icon="graph-bar"></calcite-icon>
-                <p>No chart is active. Select one to check out the data</p>
-              </div>
-          </div>
-        </div>
+      <calcite-panel heading="Charts" id="panel-start">
+        <!-- BEGIN: Charts demo -->
+        <calcite-tabs bordered layout="center" scale="l">
+          <calcite-tab-nav slot="title-group">
+            <calcite-tab-title selected> Pie Chart </calcite-tab-title>
+            <calcite-tab-title> Bar Chart</calcite-tab-title>
+          </calcite-tab-nav>
+          <calcite-tab selected>
+            <arcgis-charts-pie-chart>
+              <arcgis-charts-action-bar slot="action-bar"></arcgis-charts-action-bar>
+            </arcgis-charts-pie-chart>
+          </calcite-tab>
+          <calcite-tab>
+            <arcgis-charts-bar-chart>
+              <arcgis-charts-action-bar slot="action-bar"></arcgis-charts-action-bar>
+            </arcgis-charts-bar-chart>
+          </calcite-tab>
+        </calcite-tabs>
+        <!-- END: Charts demo -->
       </calcite-panel>
     </calcite-shell-panel>
-
-    <arcgis-map item-id="d06da6d5d902410698d3efebddae65cd">
-      <!-- <arcgis-sketch
-          position="top-right"
-          creation-mode="update"
-          layout="horizontal"
-        >
-        </arcgis-sketch> -->
+    <arcgis-map item-id="f0b09e9e0be14b99b948a29d32112823">
+      <arcgis-expand position="top-right" group="top-right">
+        <arcgis-legend legend-style="classic" />
+      </arcgis-expand>
+      <arcgis-expand position="top-right" group="top-right">
+        <arcgis-layer-list />
+      </arcgis-expand>
+      <arcgis-expand expand-icon="cursor-plus" position="top-left">
+        <arcgis-placement>
+          <poi-marker></poi-marker>
+        </arcgis-placement>
+      </arcgis-expand>
     </arcgis-map>
-    <calcite-panel slot="footer" id="calcite-panel-footer" heading="Test"> </calcite-panel>
   </calcite-shell>
+
+  <script type="module" src="/src/components/poi-marker.ts"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
